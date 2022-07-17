@@ -1,10 +1,11 @@
-import logging
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 import os
 import datetime
 import jwt
+
 
 # logging.getLogger().setLevel(logging.INFO)
 
@@ -39,11 +40,56 @@ class Customer(db.Model):
     self.dob = dob
     self.updated_at = updated_at
 
-db.create_all() # SQLAlchemy create database table
+db.create_all() # SQLAlchemy create database tables
+
+# START JWT Auth  ======================================================================
+
+# admin auth for JWT
+@app.route('/api/v1/admins/auth')
+def adminToken():
+  auth = request.authorization
+
+  if not auth or not auth.username or not auth.password:
+    return make_response('Invalid login', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+
+  user = db.session.query(Admin).filter_by(name=auth.username).first()
+
+  if not user:
+    return make_response('Invalid login', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+
+  if not check_password_hash(user.password, auth.password):
+    return make_response('Invalid login', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+
+  token = jwt.encode({'id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=2)}, app.config['SECRET_KEY'])
+  return jsonify({'token': token})
+
+def tokenRequired(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+
+        if 'x-access-token' not in request.headers:
+            return jsonify({'message' : 'Token is missing!'}), 401
+
+        token = request.headers['x-access-token']
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            adminAuthenticated = db.session.query(Admin).filter_by(id=data['id']).first()
+        except:
+            return jsonify({'message' : 'Token is invalid!'}), 401
+
+        return f(adminAuthenticated, *args, **kwargs)
+
+    return decorated
+
+# END JWT Auth ========================================================================
 
 @app.route("/")
 def main():
   return "Klinify Engineer Task - Ariff Azman"
+
+# START ADMIN ROUTES ==================================================================
 
 # POST / CREATE
 @app.route('/api/v1/admins', methods=['POST'])
@@ -56,16 +102,28 @@ def add_admin():
 
 # GET all / LIST all
 @app.route('/api/v1/admins/all', methods=['GET'])
-def get_admins():
+@tokenRequired
+def get_admins(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
   admins = []
   for admin in db.session.query(Admin).all():
     del admin.__dict__['_sa_instance_state']
     admins.append(admin.__dict__)
   return jsonify(admins)
 
+# END ADMIN ROUTES ==================================================================
+
+# START CUSTOMER ROUTES =============================================================
+
 # POST / CREATE
 @app.route('/api/v1/customers', methods=['POST'])
-def add_customer():
+@tokenRequired
+def add_customer(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
   data = request.get_json()
   db.session.add(Customer(data['name'], data['dob'], datetime.datetime.now()))
   db.session.commit()
@@ -73,8 +131,12 @@ def add_customer():
 
 # GET one / READ
 # .../api/v1/customers?id=1
-@app.route('/api/v1/customers', methods=['GET'])
-def get_customer():
+@app.route('/api/v1/customer', methods=['GET'])
+@tokenRequired
+def get_customer(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
   if not 'id' in request.args:
     return jsonify({'message': 'provide customer id'})
 
@@ -85,8 +147,12 @@ def get_customer():
   return jsonify(customer.__dict__)
 
 # PUT / UPDATE
-@app.route('/api/v1/customers', methods=['PUT'])
-def update_customer():
+@app.route('/api/v1/customer', methods=['PUT'])
+@tokenRequired
+def update_customer(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
   if not 'id' in request.args:
     return jsonify({'message': 'provide customer id'})
 
@@ -102,8 +168,12 @@ def update_customer():
 
 
 # DELETE
-@app.route('/api/v1/customers', methods=['DELETE'])
-def delete_customer():
+@app.route('/api/v1/customer', methods=['DELETE'])
+@tokenRequired
+def delete_customer(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
   if not 'id' in request.args:
     return jsonify({'message': 'provide customer id'})
 
@@ -117,51 +187,35 @@ def delete_customer():
 
 # GET all / LIST all
 @app.route('/api/v1/customers/all', methods=['GET'])
-def get_customers():
+@tokenRequired
+def get_customers(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
   customers = []
   for customer in db.session.query(Customer).all():
-    # logging.info(customer.__dict__['_sa_instance_state'])
     del customer.__dict__['_sa_instance_state']
     customers.append(customer.__dict__)
   return jsonify(customers)
 
-# GET youngest / LIST youngest
-@app.route('/api/v1/customers/youngest/<size>', methods=['GET'])
-def get_customers_youngest(size):
+# GET size / LIST size
+# .../api/v1/customers?size=1
+@app.route('/api/v1/customers', methods=['GET'])
+@tokenRequired
+def get_customers_size(adminAuthenticated):
+  if not adminAuthenticated:
+    return jsonify({'message': 'unauthorized'})
+
+  if not 'size' in request.args:
+    return jsonify({'message': 'provide customer size'})
+
   customers = []
-  for customer in db.session.query(Customer).order_by(Customer.dob.desc()).limit(size):
+  for customer in db.session.query(Customer).order_by(Customer.dob.desc()).limit(int(request.args['size'])):
     del customer.__dict__['_sa_instance_state']
     customers.append(customer.__dict__)
   return jsonify(customers)
 
-# GET oldest / LIST oldest
-@app.route('/api/v1/customers/oldest/<size>', methods=['GET'])
-def get_customers_oldest(size):
-  customers = []
-  for customer in db.session.query(Customer).order_by(Customer.dob.asc()).limit(size):
-    del customer.__dict__['_sa_instance_state']
-    customers.append(customer.__dict__)
-  return jsonify(customers)
-
-
-@app.route('/api/v1/admins/login')
-def login():
-  auth = request.authorization
-
-  if not auth or not auth.username or not auth.password:
-    return make_response('Invalid login', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
-
-  user = db.session.query(Admin).filter_by(name=auth.username).first()
-
-  if not user:
-    return make_response('Invalid login', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
-
-  if not check_password_hash(user.password, auth.password):
-    return make_response('Invalid login', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
-
-  token = jwt.encode({'id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)}, app.config['SECRET_KEY'])
-  return jsonify({'token': token})
-
+# END CUSTOMER ROUTES ===============================================================
 
 if __name__ == '__main__':
     app.run(debug=True)
