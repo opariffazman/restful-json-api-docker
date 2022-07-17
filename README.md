@@ -33,3 +33,9 @@ Run this command to enter the postgresql db container
 ```powershell
 docker exec -it db psql -U postgres
 ```
+
+# Postman
+
+Software [Installation](https://www.postman.com/downloads/)
+
+JSON Test [collection](https://www.getpostman.com/collections/37c6351577b1f3e9d8d2)
