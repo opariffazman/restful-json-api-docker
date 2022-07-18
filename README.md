@@ -124,8 +124,15 @@ Use the same name & password you've created earlier > `Send`
 
 You will get a token in response in such format, copy the token (_valid for 2 minutes_) as below:
 
+![admin-token](docs/admin-token.png)
+
+Endpoint with Token: `required` will need to be supplied with this token as key for `x-access-token` on the `Headers` for example.
+
+### Token Related Error
+
 Getting this __error__ when calling the API with Token required means your token is __expired__ or __incorrect__:
 
+#### Token is invalid
 ```json
 {
     "message": "Token is invalid!"
@@ -134,15 +141,12 @@ Getting this __error__ when calling the API with Token required means your token
 
 While this __error__ means that the `x-access-token` is not available in the `Headers` of the API call:
 
+#### Token is missing
 ```json
 {
     "message": "Token is missing!"
 }
 ```
-
-![admin-token](docs/admin-token.png)
-
-Endpoint with Token: `required` will need to be supplied with this token as key for `x-access-token` on the `Headers` for example.
 
 ![create-customer-1](docs/create-customer-1.png)
 ___
