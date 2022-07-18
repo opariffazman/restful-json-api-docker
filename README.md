@@ -92,10 +92,17 @@ ___
 | INFO   |  |
 | -------- | -------- |
 | METHOD   | POST |
-| ENDPOINT | http://localhost:5000/api/v1/admins |
+| ENDPOINT | `/api/v1/admins` |
 | TOKEN    | none |
 
-Provide a name & password > `Send`
+Provide a `name` & `password`, modify the JSON information as needed > `Send`
+
+```json
+{
+    "name":"admin",
+    "password":"12345"
+}
+```
 
 ![create-admin](docs/create-admin.png)
 ___
@@ -103,19 +110,19 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | GET |
-| ENDPOINT | http://localhost:5000/api/v1/admins/auth |
-| TOKEN    | none |
+| METHOD   | `GET` |
+| ENDPOINT | `/api/v1/admins/auth` |
+| TOKEN    | `none` |
 
 Use the same name & password you've created earlier > `Send`
 
 ![admin-auth](docs/admin-auth.png)
 
-You will get a token in response in such format, copy the token as below (valid for 2 minutes)
+You will get a token in response in such format, copy the token (_valid for 2 minutes_) as below:
 
 ![admin-token](docs/admin-token.png)
 
-Endpoint with Token: `required` will need to be supplied with this token as key for `x-access-token` on the `Headers` for example
+Endpoint with Token: `required` will need to be supplied with this token as key for `x-access-token` on the `Headers` for example.
 
 ![create-customer-1](docs/create-customer-1.png)
 ___
@@ -123,11 +130,20 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | POST |
-| ENDPOINT | http://localhost:5000/api/v1/customers |
-| TOKEN    | required |
+| METHOD   | `POST` |
+| ENDPOINT | `/api/v1/customers` |
+| TOKEN    | `required` |
 
-This endpoint will add new customer with values of `name` & `dob` (date of birth)
+This endpoint will add new customer with values of `name` & `dob` (date of birth). 
+
+Modify the JSON information as needed > `Send`
+
+```json
+{
+    "name":"name1",
+    "dob":"2010-10-10"
+}
+```
 
 ![create-customer-2](docs/create-customer-2.png)
 ___
@@ -135,11 +151,11 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | GET |
-| ENDPOINT | http://localhost:5000/api/v1/customers/all |
-| TOKEN    | required |
+| METHOD   | `GET` |
+| ENDPOINT | `/api/v1/customers/all` |
+| TOKEN    | `required` |
 
-This endpoint will list all the customers in the table
+This endpoint will list all the customers in the table after > `Send`.
 
 ![get-customers](docs/get-customers.png)
 ___
@@ -147,11 +163,11 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | GET |
-| ENDPOINT | http://localhost:5000/api/v1/customers?size={{customer_size}} |
-| TOKEN    | required |
+| METHOD   | `GET` |
+| ENDPOINT | `/api/v1/customers?size={{customer_size}}` |
+| TOKEN    | `required` |
 
-This endpoint will get the list of customer according to given size ordered by youngest age
+This endpoint will get the list of customer according to given size, for example `?size=10` ordered by youngest age after > `Send`
 
 ![get-customers-size](docs/get-customers-size.png)
 ___
@@ -159,11 +175,11 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | GET |
-| ENDPOINT | http://localhost:5000/api/v1/customer?id={{customer_id}} |
-| TOKEN    | required |
+| METHOD   | `GET` |
+| ENDPOINT | `/api/v1/customer?id={{customer_id}}` |
+| TOKEN    | `required` |
 
-This endpoint will get a specific customer with id given
+This endpoint will get a specific customer with id given, for example `?id=1` > `Send`
 
 ![get-customer](docs/get-customer.png)
 ___
@@ -171,11 +187,11 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | PUT |
-| ENDPOINT | http://localhost:5000/api/v1/customer?id={{customer_id}} |
-| TOKEN    | required |
+| METHOD   | `PUT` |
+| ENDPOINT | `/api/v1/customer?id={{customer_id}}` |
+| TOKEN    | `required` |
 
-This endpoint will update the record of a specific customer with id given
+This endpoint will update the record of a specific customer with id given, for example `?id=1` > `Send`
 
 ![get-customer](docs/get-customer.png)
 ___
@@ -183,11 +199,11 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | DELETE |
-| ENDPOINT | http://localhost:5000/api/v1/customer?id={{customer_id}} |
-| TOKEN    | required |
+| METHOD   | `DELETE` |
+| ENDPOINT | `/api/v1/customer?id={{customer_id}}` |
+| TOKEN    | `required` |
 
 
-This endpoint will update the record of a specific customer with id given
+This endpoint will update the record of a specific customer with id given, for example `?id=1` > `Send`
 
 ![delete-customer](docs/delete-customer.png)
