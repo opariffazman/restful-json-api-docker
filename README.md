@@ -52,6 +52,8 @@ __Pip requirements__
 
 ## Docker Commands
 
+__Ensure Docker Desktop__ is started and running on background.
+
 Open a PowerShell session inside the root folder of this repository.
 
 ```
