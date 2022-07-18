@@ -5,7 +5,7 @@
 - On __Windows__, you may get a prompt to download [WSL2 Kernel Engine](https://aka.ms/wsl2kernel) as well
 
 [Postman](https://www.postman.com/downloads/)
-- To utilize the json collection for calls to the api endpoints
+- To utilize the json [collection](https://www.getpostman.com/collections/37c6351577b1f3e9d8d2) for calls to the api endpoints
 
 # Getting Started
 
@@ -30,7 +30,7 @@ For ease of deployment, we will make use of the `Dockerfile` and `docker-compose
 
 ## For reference only 
 
-_All of this will be included automatically during build_:
+_All of these will be included automatically during build_:
 
 __Dockerfile__
 
@@ -83,7 +83,11 @@ Or you could verify on the `Docker Desktop` application > `Containers` as below:
 
 # API Usage
 
-Open `Postman` and import the json by navigating to `Import` > `Link` > `Enter a URL` > `https://www.getpostman.com/collections/37c6351577b1f3e9d8d2`
+Open `Postman` and import the json by navigating to `Import` > `Link` > `Enter a URL` >
+
+```
+https://www.getpostman.com/collections/37c6351577b1f3e9d8d2
+```
 
 ![postman-import](docs/postman-import.png)
 ___
@@ -95,7 +99,7 @@ ___
 | ENDPOINT | `/api/v1/admins` |
 | TOKEN    | `none` |
 
-Provide a `name` & `password`, modify the JSON information as needed > `Send`
+Provide a `name` & `password`, modify the `JSON` body information as needed > `Send`
 
 ```json
 {
@@ -120,6 +124,22 @@ Use the same name & password you've created earlier > `Send`
 
 You will get a token in response in such format, copy the token (_valid for 2 minutes_) as below:
 
+Getting this __error__ when calling the API with Token required means your token is __expired__ or __incorrect__:
+
+```json
+{
+    "message": "Token is invalid!"
+}
+```
+
+While this __error__ means that the `x-access-token` is not available in the `Headers` of the API call:
+
+```json
+{
+    "message": "Token is missing!"
+}
+```
+
 ![admin-token](docs/admin-token.png)
 
 Endpoint with Token: `required` will need to be supplied with this token as key for `x-access-token` on the `Headers` for example.
@@ -136,7 +156,7 @@ ___
 
 This endpoint will add new customer with values of `name` & `dob` (date of birth). 
 
-Modify the JSON information as needed > `Send`
+Modify the `JSON` body information as needed > `Send`
 
 ```json
 {
