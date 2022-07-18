@@ -91,9 +91,9 @@ ___
 
 | INFO   |  |
 | -------- | -------- |
-| METHOD   | POST |
+| METHOD   | `POST` |
 | ENDPOINT | `/api/v1/admins` |
-| TOKEN    | none |
+| TOKEN    | `none` |
 
 Provide a `name` & `password`, modify the JSON information as needed > `Send`
 
