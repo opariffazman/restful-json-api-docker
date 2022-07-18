@@ -13,8 +13,17 @@ Clone this [repo](https://github.com/opariffazman/restful-json-api-docker.git) i
 
 ![download-zip](docs/download-zip.png)
 
-And extract its content
+And extract its content accordingly.
 
+```
+📦restful-json-api-docker
+ ┣ 📜docker-compose.yml
+ ┣ 📜Dockerfile
+ ┣ 📜main.py
+ ┣ 📜README.md
+ ┗ 📜requirements.txt
+ ```
+ 
 # Deployment
 
 For ease of deployment, we will make use of the `Dockerfile` and `docker-compose.yml`
@@ -55,18 +64,18 @@ Open a PowerShell session inside the root folder of this repository.
  ┗ 📜requirements.txt
 ```
 
-Run this command to start deploying the API container
+Run this command to start deploying the API containers with all its dependencies.
 ```powershell
 docker compose up --build api
 ```
 
-Once the shell is reporting that the api is running like below
+Once the shell is reporting that the api is running like below:
 ```powershell
 api  |  * Running on http://127.0.0.1:5000
 api  |  * Running on http://172.24.0.3:5000 (Press CTRL+C to quit)
 ```
 
-Or you could verify on the `Docker Desktop` application > `Containers` as below
+Or you could verify on the `Docker Desktop` application > `Containers` as below:
 
 ![docker-desktop](docs/docker-desktop.png)
 
