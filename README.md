@@ -2,6 +2,7 @@
 
 [Docker Desktop](https://docs.docker.com/desktop/)
 - To deploy the containers used for this api
+- On __Windows__, you may get a prompt to download [WSL2 Kernel Engine](aka.ms/wsl2kernel) as well
 
 [Postman](https://www.postman.com/downloads/)
 - To utilize the json collection for calls to the api endpoints
@@ -43,6 +44,16 @@ __Pip requirements__
 ## Docker Commands
 
 Open a PowerShell session inside the root folder of this repository.
+
+```
+📦restful-json-api-docker
+ ┣ 📂.git
+ ┣ 📜docker-compose.yml
+ ┣ 📜Dockerfile
+ ┣ 📜main.py
+ ┣ 📜README.md
+ ┗ 📜requirements.txt
+```
 
 Run this command to start deploying the API container
 ```powershell
