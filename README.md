@@ -155,9 +155,11 @@ ___
 | ENDPOINT | `/api/v1/customers/all` |
 | TOKEN    | `required` |
 
-This endpoint will list all the customers in the table after > `Send`.
+This endpoint will list all the customers in the table after > `Send`
 
 ![get-customers](docs/get-customers.png)
+
+The `updated_at` field will be filled in by the API once customer is __created__ / __updated__ via [create-customer](#create-customer) / [update-customer](#update-customer)
 ___
 ## get-customers-size
 
