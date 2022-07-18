@@ -2,7 +2,7 @@
 
 [Docker Desktop](https://docs.docker.com/desktop/)
 - To deploy the containers used for this api
-- On __Windows__, you may get a prompt to download [WSL2 Kernel Engine](aka.ms/wsl2kernel) as well
+- On __Windows__, you may get a prompt to download [WSL2 Kernel Engine](https://aka.ms/wsl2kernel) as well
 
 [Postman](https://www.postman.com/downloads/)
 - To utilize the json collection for calls to the api endpoints
