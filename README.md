@@ -18,14 +18,17 @@ And extract its content
 
 For ease of deployment, we will make use of the `Dockerfile` and `docker-compose.yml`
 
-For reference only (already included when build):
-## Dockerfile
+## For reference only 
+
+_All of this will be included automatically during build_:
+
+__Dockerfile__
 
 - [Python 3.10-Slim](https://hub.docker.com/_/python)
 
 - [Postgres 14](https://hub.docker.com/_/postgres)
 
-## Pip requirements
+__Pip requirements__
 
 - [flask](https://flask.palletsprojects.com/en/2.1.x/) - Application Framework
 
